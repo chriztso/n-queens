@@ -16,19 +16,50 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = []; //fixme
+  // Recursive solution
+  let board = new Board({n:n});
+  let solution;
   
-  for (let i = 0; i < n; i++) {
-    let template = [];
-    for (let j = 0; j < n; j++) {
-      template.push(0);  
+  let findOneSolution = function (row = 0) {
+    //base case: row === n there are no more rows to check
+    if (row === n) {
+      solution = board;
+      return;
     }
-    template[i] = 1;
-    solution.push(template);
+    
+    //recursion case that only runs while there is no solution
+    for (let i = 0; i < n; i++) {
+      board.togglePiece(row, i);
+      if(!board.hasColConflictAt(i)){
+        findOneSolution(row + 1);
+      }
+      if (solution) {
+        return;
+      }
+      board.togglePiece(row, i);
+    }
   }
+  
+  findOneSolution();
+  
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  return solution ? solution.rows() : board.rows();
+  
+  
+  
+  // var solution = []; //STRAIGHT CHEESE
+  
+  // for (let i = 0; i < n; i++) {
+  //   let template = [];
+  //   for (let j = 0; j < n; j++) {
+  //     template.push(0);  
+  //   }
+  //   template[i] = 1;
+  //   solution.push(template);
+  // }
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
